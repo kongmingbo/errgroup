@@ -30,7 +30,7 @@ type Group struct {
 
 	errOnce sync.Once
 
-	err *SyncError
+	err error
 }
 
 func (g *Group) Wait() error {
@@ -51,7 +51,7 @@ func (g *Group) Go(f func() error) {
 			g.errOnce.Do(func() {
 				g.err = &SyncError{}
 			})
-			g.err.Store(err, f)
+			g.err.(*SyncError).Store(err, f)
 		}
 	}()
 }
